@@ -612,6 +612,12 @@ function trainer_filter () {
 			}
 		});
 		trainers(DATA);
+		const buttons = document.querySelectorAll(".sorting__element.sorting__btn");
+		[...buttons].forEach((element)=>{
+			if(element.className === "sorting__element sorting__btn sorting__btn--active"){
+				element.className = "sorting__element sorting__btn";
+			}
+		});
 	});
 	
 }
