@@ -419,7 +419,7 @@ function info (DATA){              // Модальне вікно з інфор�
 		}
 	})
 }
-function trainer_sort () {          // Сортування карток тренерів
+function trainer_sort (tmp) {          // Сортування карток тренерів
 	const sorting = document.querySelector(".sorting");
 	const buttons = document.querySelectorAll(".sorting__element.sorting__btn");
 	const originalDATA = [...DATA];
@@ -432,15 +432,25 @@ function trainer_sort () {          // Сортування карток тре�
 			});
 			event.target.className = "sorting__element sorting__btn sorting__btn--active";
 			if(event.target.innerText.toLowerCase() === "за замовчуванням"){
-				const trainer = document.querySelectorAll(".trainer");
-				trainer.forEach((element)=>{
-					element.remove();
-				})
-				DATA.length = 0; 
-				for(let el of originalDATA){
-					DATA.push(el);
+				if(DATA.length < 24) {
+					const tmpDATA = [...tmp];
+					const trainer = document.querySelectorAll(".trainer");
+					trainer.forEach((element)=>{
+						element.remove();
+					})
+					trainers(tmpDATA);
 				}
-				trainers(DATA);
+				else{
+					const trainer = document.querySelectorAll(".trainer");
+					trainer.forEach((element)=>{
+						element.remove();
+					})
+					DATA.length = 0; 
+					for(let el of originalDATA){
+						DATA.push(el);
+					}
+					trainers(DATA);
+				}
 			}
 			if(event.target.innerText.toLowerCase() === "за прізвищем"){
 				DATA.sort((a, b) => a["last name"].localeCompare(b["last name"]));
@@ -461,6 +471,7 @@ function trainer_sort () {          // Сортування карток тре�
 		}
 	});
 }
+const tmp = [];
 function trainer_filter () {
 	const button = document.querySelector(".filters__submit");
 	const inputs = document.querySelectorAll(".filters__input");
@@ -612,18 +623,28 @@ function trainer_filter () {
 			}
 		});
 		trainers(DATA);
+		tmp.length = 0;
+		for(let el of DATA){
+			tmp.push(el);
+		}
 		const buttons = document.querySelectorAll(".sorting__element.sorting__btn");
 		[...buttons].forEach((element)=>{
 			if(element.className === "sorting__element sorting__btn sorting__btn--active"){
 				element.className = "sorting__element sorting__btn";
 			}
 		});
+		[...buttons].forEach((element)=>{
+			if(element.innerText.toUpperCase() === "ЗА ЗАМОВЧУВАННЯМ"){
+				element.className = "sorting__element sorting__btn sorting__btn--active";
+
+			}
+		})
 	});
 	
 }
 trainers(DATA);
 info(DATA);
-trainer_sort();
+trainer_sort(tmp);
 trainer_filter();
 
 
